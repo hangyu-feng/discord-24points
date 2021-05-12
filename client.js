@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const getGame = require('./generate').getGame
+const getGame = require('./generate').getGame;
 
 module.exports = { client };
 
