@@ -10,8 +10,8 @@ const leaveGroup = require('./generate').leaveGroup;
 
 module.exports = { client };
 
-var prevNum = ""; 
-var prevAns = ""; 
+var prevNum = "";
+var prevAns = "";
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
@@ -19,7 +19,7 @@ client.on('ready', () => {
 
 client.on('message', msg => {
   if (msg.content === '-getG' || msg.content === '-getGame') {
-    
+
     while(true){
       prevNum = getGame()
       prevAns = getAns(prevNum)
