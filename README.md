@@ -7,6 +7,7 @@ https://discord.com/oauth2/authorize?client_id=841976700019671040&scope=bot
 ## Installation
 
 ```sh
+cd discord-24points
 npm install
 ```
 
