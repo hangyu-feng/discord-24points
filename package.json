@@ -1,0 +1,24 @@
+{
+  "name": "discord-24points",
+  "version": "1.0.0",
+  "description": "```sh\r npm install discord.js\r ```",
+  "main": "24points.js",
+  "dependencies": {
+    "discord.js": "^12.5.3",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hangyu-feng/discord-24points.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hangyu-feng/discord-24points/issues"
+  },
+  "homepage": "https://github.com/hangyu-feng/discord-24points#readme"
+}
