@@ -16,8 +16,9 @@ function getGame(min = 1, max = 13) {
 
 
 function getHelp() {
-  
+
   return "\
+app website: https://github.com/hangyu-feng/discord-24points\
 -getRandomGame or -getR generate four 1-13 number for the 24 points\n\
 -getGame or -getG generate four 1-13 number for the 24 points that must have answer\n\
 -join <Group> add yourself to the <Group>\n\
@@ -42,7 +43,7 @@ function leaveGroup(groupName,auther) {
     groupSet.delete(auther);
     groupMap.set(groupName,groupSet);
   }
-  
+
   return groupName;
 }
 
@@ -86,7 +87,7 @@ function judge(numsArray,numsStrArray, result = 24) {
 
   for (let i = 0; i < numsArray.length - 1; i++) {
       for (let j = i + 1; j < numsArray.length; j++) {
-          let n1 = numsArray[i];
+          let n1 = numsArray[geti];
           let n2 = numsArray[j];
           let s1 = numsStrArray[i];
           let s2 = numsStrArray[j];
