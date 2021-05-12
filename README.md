@@ -3,6 +3,7 @@
 ## Installation
 
 ```sh
+cd discord-24points
 npm install
 ```
 
