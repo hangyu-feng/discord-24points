@@ -1,17 +1,9 @@
 const Discord = require('discord.js');
-const yaml = require('js-yaml');
-const fs = require('fs');
-
+const client = new Discord.Client();
 const getGame = require('./generate').getGame
 
-const confidential = yaml.load(fs.readFileSync('confidential.yml', 'utf8', err => {
-  if (err) {
-    console.error(err)
-    return
-  }
-}));
+module.exports = { client };
 
-const client = new Discord.Client();
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
@@ -22,6 +14,3 @@ client.on('message', msg => {
     msg.channel.send(getGame())
   }
 });
-
-
-client.login(confidential.token);
