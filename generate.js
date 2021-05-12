@@ -18,7 +18,7 @@ function getGame(min = 1, max = 13) {
 function getHelp() {
 
   return "\
-app website: https://github.com/hangyu-feng/discord-24points\
+app website: https://github.com/hangyu-feng/discord-24points\n\
 -getRandomGame or -getR generate four 1-13 number for the 24 points\n\
 -getGame or -getG generate four 1-13 number for the 24 points that must have answer\n\
 -join <Group> add yourself to the <Group>\n\
