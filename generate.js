@@ -24,6 +24,8 @@ app website: https://github.com/hangyu-feng/discord-24points\n\
 -join <Group> add yourself to the <Group>\n\
 -at <Group> at everyone in the <Group>\n\
 -ans get the answer of the previous four number\n\
+-root set the channel as root channel\n\
+-tellRoot send the message in the root channel to tell everyone, can be done in private chat, but the user id would be recorded, abuse would be banned\n\
 -help or -h get the help"
 }
 
