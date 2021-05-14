@@ -1,127 +1,154 @@
-const Discord = require('discord.js');
+const Discord = require("discord.js");
 const client = new Discord.Client();
-const getGame = require('./generate').getGame;
-const getHelp = require('./generate').getHelp;
-const atGroup = require('./generate').atGroup;
-const getAns = require('./generate').getAns;
-const joinGroup = require('./generate').joinGroup;
-const leaveGroup = require('./generate').leaveGroup;
-
+const generate = require("./generate");
+const yaml = require("js-yaml");
+const fs = require("fs");
 
 module.exports = { client };
 
-var prevNum = "";
-var prevAns = "";
-var rootChannel = null;
+/*************************************************************
+ *                      Properties                           *
+ *************************************************************/
 
-const yaml = require('js-yaml');
-const fs = require('fs');
-const confidential = yaml.load(fs.readFileSync('confidential.yml', 'utf8', err => {
-  if (err) {
-    console.error(err)
-    return
+client.rootChannel = null;
+client.groupList = new Set();
+client.adminSet = new Set();
+client.prevNum = [];
+client.prevAns = "no ans";
+client.confidential = yaml.load(
+  fs.readFileSync("confidential.yml", "utf8", (err) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+  })
+);
+
+/*************************************************************
+ *                         Helpers                           *
+ *************************************************************/
+
+client.replyGetGame = function (msg, haveAns = true) {
+  do {
+    this.prevNum = generate.getGame();
+    this.prevAns = generate.getAns(this.prevNum);
+  } while (haveAns && this.prevAns === "no ans");
+  msg.channel.send(this.prevNum.join(", "));
+};
+
+client.replyAt = function (msg) {
+  const group = msg.content.split(" ")[1];
+  if (this.groupList.has(group)) {
+    msg.channel.send(generate.atGroup(group));
+  } else {
+    msg.channel.send(
+      "请选择以下group中的一个【均以美西时间为准】：\n晨练， 下午， 傍晚， 夜班车"
+    );
   }
-}));
+};
 
+client.replyJoin = function (msg) {
+  const group = msg.content.split(" ")[1];
+  const auther = msg.author.toString();
+  if (this.groupList.has(group)) {
+    generate.joinGroup(group, auther);
+  } else {
+    msg.channel.send(
+      "请选择以下group中的一个【均以美西时间为准】：\n晨练， 下午， 傍晚， 夜班车"
+    );
+  }
+};
 
-const GroupList = new Set();
-const adminSet = new Set();
+client.replyLeave = function (msg) {
+  const group = msg.content.split(" ")[1];
+  const author = msg.author.toString();
+  if (this.groupList.has(group)) {
+    generate.leaveGroup(group, author);
+  } else {
+    msg.channel.send(
+      "请选择以下group中的一个【均以美西时间为准】：\n晨练， 下午， 傍晚， 夜班车"
+    );
+  }
+};
 
-client.on('ready', () => {
+client.replyAns = function (msg) {
+  msg.channel.send(this.prevAns);
+};
+
+client.replyRoot = function (msg) {
+  if (this.adminSet.has(msg.author.toString())) {
+    this.rootChannel = msg.channel;
+  } else {
+    msg.channel.send("Only Admin can set the root");
+  }
+};
+
+client.replyTellRoot = function (msg) {
+  if (this.rootChannel !== null) {
+    const message = msg.content.split(" ")[1];
+    this.rootChannel.send(message + "望周知");
+  } else {
+    msg.channel.send("no root channel");
+  }
+};
+
+client.replyIAmAdmin = function (msg) {
+  const password = msg.content.split(" ")[1];
+  if (password === this.confidential.adminpassword) {
+    this.adminSet.add(msg.author.toString());
+    msg.channel.send("hello admin");
+  } else {
+    msg.channel.send("wrong password");
+  }
+};
+
+client.replyNetworth = function (msg) {
+  const buyback = Number(msg.content.split(" ")[1]);
+  if (!Number.isInteger(buyback) || buyback <= 0) {
+    msg.channel.send("Usage: -networth <buyback cost>");
+  } else {
+    msg.channel.send(`The networth is ${Math.floor((buyback - 200) * 13)}`);
+  }
+};
+
+client.msgHandler = function (msg) {
+  if (msg.content === "-getG" || msg.content === "-getGame") {
+    this.replyGetGame(msg);
+  } else if (msg.content === "-getR" || msg.content === "-getRandomGame") {
+    this.replyGetGame(msg, false);
+  } else if (msg.content === "-help" || msg.content === "-h") {
+    msg.channel.send(generate.getHelp());
+  } else if (msg.content.startsWith("-at")) {
+    this.replyAt(msg, client);
+  } else if (msg.content.startsWith("-join")) {
+    this.replyJoin(msg, client);
+  } else if (msg.content.startsWith("-leave")) {
+    this.replyLeave(msg, client);
+  } else if (msg.content === "-ans") {
+    this.replyAns(msg, client);
+  } else if (msg.content === "-root") {
+    this.replyRoot(msg, client);
+  } else if (msg.content.startsWith("-tellRoot")) {
+    this.replyTellRoot(msg, client);
+  } else if (msg.content.startsWith("-iAmAdmin")) {
+    this.replyIAmAdmin(msg, client);
+  } else if (msg.content.startsWith("-net") || msg.content.startsWith("-networth")) {
+    this.replyNetworth(msg);
+  } else if (msg.content.startsWith("-")) {
+    msg.channel.send("command not recognized");
+  }
+};
+
+/*************************************************************
+ *                          Events                           *
+ *************************************************************/
+
+client.on("message", client.msgHandler);
+
+client.on("ready", () => {
   console.log(`Logged in as ${client.user.tag}!`);
-  GroupList.add("晨练")
-  GroupList.add("下午")
-  GroupList.add("傍晚")
-  GroupList.add("夜班车")
-});
-
-client.on('message', msg => {
-  if (msg.content === '-getG' || msg.content === '-getGame') {
-
-    while(true){
-      prevNum = getGame()
-      prevAns = getAns(prevNum)
-      if(prevAns !== "no ans"){
-        msg.channel.send(prevNum.join(", "))
-        break;
-      }
-    }
-
-  }
-  else if (msg.content === '-getR' || msg.content === '-getRandomGame') {
-    prevNum = getGame()
-    prevAns = ""
-    msg.channel.send(prevNum.join(", "))
-  }
-  else if (msg.content === '-help' || msg.content === '-h') {
-    msg.channel.send(getHelp())
-  }
-  else if (msg.content.substr(0,4) === '-at ') {
-    const group = msg.content.split(" ")[1]
-    if(GroupList.has(group)){
-      msg.channel.send(atGroup(group))
-    }
-    else{
-      msg.channel.send("请选择以下group中的一个【均以美西时间为准】：\n晨练， 下午， 傍晚， 夜班车")
-    }
-    
-  }
-  else if (msg.content.substr(0,6) === '-join ') {
-    const group = msg.content.split(" ")[1]
-    const auther = msg.author.toString()
-    if(GroupList.has(group)){
-      joinGroup(group,auther)
-    }
-    else{
-      msg.channel.send("请选择以下group中的一个【均以美西时间为准】：\n晨练， 下午， 傍晚， 夜班车")
-    }
-  }
-  else if (msg.content.substr(0,7) === '-leave ') {
-    const group = msg.content.split(" ")[1]
-    const auther = msg.author.toString()
-    if(GroupList.has(group)){
-      leaveGroup(group,auther)
-    }
-    else{
-      msg.channel.send("请选择以下group中的一个【均以美西时间为准】：\n晨练， 下午， 傍晚， 夜班车")
-    }
-  }
-  else if (msg.content === '-ans') {
-    if(prevAns===""){
-      prevAns = getAns(prevNum)
-      msg.channel.send(prevAns)
-    }
-    else{
-      msg.channel.send(prevAns)
-    }
-  }
-  else if (msg.content === '-root') {
-    if(adminSet.has(msg.author.toString())){
-      rootChannel = msg.channel;
-    }
-    else{
-      msg.channel.send("Only Admin can set the root")
-    }
-  }
-  else if (msg.content.substr(0,10) === '-tellRoot ') {
-    if(rootChannel!==null){
-      const message = msg.content.split(" ")[1]
-      rootChannel.send(message +"望周知")
-    }
-    else{
-      msg.channel.send("no root channel")
-    }
-  }
-  else if (msg.content.substr(0,10) === '-IamAdmin ') {
-    const password = msg.content.split(" ")[1]
-    if(password===confidential.adminpassword){
-      adminSet.add(msg.author.toString())
-      msg.channel.send("hello admin")
-    }
-    else{
-      msg.channel.send("wrong password")
-    }
-    
-  }
-
+  client.groupList.add("晨练");
+  client.groupList.add("下午");
+  client.groupList.add("傍晚");
+  client.groupList.add("夜班车");
 });

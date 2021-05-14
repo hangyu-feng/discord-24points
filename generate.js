@@ -1,4 +1,4 @@
-module.exports = { getGame, getHelp, getAns, atGroup,joinGroup,leaveGroup };
+module.exports = { getGame, getHelp, getAns, atGroup, joinGroup, leaveGroup };
 
 
 var groupMap = new Map();
@@ -63,14 +63,12 @@ function joinGroup(groupName,auther) {
 }
 
 function getAns(prevNum) {
-  let numbersStrArray = prevNum.map(x=>x.toString());
+  let numbersStrArray = prevNum.map(x => x.toString());
 
-  if(judge(prevNum,numbersStrArray)){
+  if (judge(prevNum, numbersStrArray)) {
     return res;
   }
-  else{
-    return "no ans"
-  }
+  return "no ans"
 }
 
 var res = "";
@@ -89,7 +87,7 @@ function judge(numsArray,numsStrArray, result = 24) {
 
   for (let i = 0; i < numsArray.length - 1; i++) {
       for (let j = i + 1; j < numsArray.length; j++) {
-          let n1 = numsArray[geti];
+          let n1 = numsArray[i];
           let n2 = numsArray[j];
           let s1 = numsStrArray[i];
           let s2 = numsStrArray[j];
