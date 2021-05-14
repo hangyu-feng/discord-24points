@@ -104,7 +104,7 @@ client.replyIAmAdmin = function (msg) {
 
 client.replyNetworth = function (msg) {
   const buyback = Number(msg.content.split(" ")[1]);
-  if (!Number.isInteger(buyback) || buyback <= 0) {
+  if (!Number.isInteger(buyback) || buyback < 200) {
     msg.channel.send("Usage: -networth <buyback cost>");
   } else {
     msg.channel.send(`The networth is ${Math.floor((buyback - 200) * 13)}`);
