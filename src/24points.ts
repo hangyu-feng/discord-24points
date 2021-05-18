@@ -10,9 +10,8 @@ export function getAns(nums: number[]) {
       if (Math.abs(numsArray[0] - target) < 1e-5) {
         res = numsStrArray[0];
         return true;
-      } else {
-        return false;
       }
+      return false;
     }
 
     for (let i = 0; i < numsArray.length - 1; i++) {
