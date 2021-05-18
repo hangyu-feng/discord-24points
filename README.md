@@ -31,4 +31,4 @@ npm test
 
 - [discord.js](https://discord.js.org/#/): Including documentations about discord.js
 
-- [nodemon](https://nodemon.io/)
+- [typescript](https://www.typescriptlang.org/download)
