@@ -19,9 +19,9 @@ export const rootPath = path.dirname(__dirname);
 const client = new Client24;
 
 client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}!`);
+  console.log("Logged in!");
 });
 
 client.on('message', client.msgHandler);
 
-client.login('token');
+client.login('ODQyMTc2MDcwMTg5ODQyNDQy.YJxflg.OZ1CoujVtzqqI5KzE_7AcgMjjOM');  // Test Bot

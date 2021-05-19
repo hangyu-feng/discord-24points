@@ -1,10 +1,10 @@
-import { Client, Message } from "discord.js";
+import { Client, Message, TextChannel, DMChannel, NewsChannel } from "discord.js";
 import { randInt } from "./randint";
 import { getAns } from "./24points";
 
 export class Client24 extends Client {
-  prevGame: number[];
-  prevAns: string;
+  prevGame: number[] = [];
+  prevAns: string = "";
 
   msgHandler(msg: Message) {
     const channel = msg.channel  // class: TextBasedChannel which I could not import
@@ -28,7 +28,7 @@ export class Client24 extends Client {
     }
   }
 
-  help(channel) {
+  help(channel: TextChannel | DMChannel | NewsChannel) {
     // TODO: localize
     channel.send([
       "-h or -help: get this message",
@@ -38,7 +38,7 @@ export class Client24 extends Client {
     ].join("\n"));
   }
 
-  getGame(channel, min = 1, max = 13) {
+  getGame(channel: TextChannel | DMChannel | NewsChannel, min = 1, max = 13) {
     do {
       this.prevGame = Array.from(Array(4)).map(() => randInt(min, max));
       this.prevAns = getAns(this.prevGame);
@@ -46,11 +46,11 @@ export class Client24 extends Client {
     channel.send(this.prevGame.join(", "));
   }
 
-  getAnswer(channel) {
+  getAnswer(channel: TextChannel | DMChannel | NewsChannel) {
     channel.send(this.prevAns);
   }
 
-  networth(channel, buyback: number) {
+  networth(channel: TextChannel | DMChannel | NewsChannel, buyback: number) {
     if (!Number.isInteger(buyback) || buyback < 200 || buyback > 100000000) {
       channel.send("Usage: -networth <buyback cost>");
     } else {

@@ -15,15 +15,13 @@ npm install
 
 ## Run
 
-Default environment
-
-```sh
-npm start
 ```
+npm install
+npx tsc  # only if you want to re-compile
 
-Run in test environment
-
-```sh
+# production env
+npm start
+# test env
 npm test
 ```
 
