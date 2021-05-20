@@ -15,7 +15,7 @@ npm install
 
 ## Run
 
-```
+```sh
 npm install
 npx tsc  # only if you want to re-compile
 
