@@ -37,5 +37,5 @@ client.on('ready', () => {
     console.log("Logged in!");
 });
 client.on('message', client.msgHandler);
-client.login('ODQyMTc2MDcwMTg5ODQyNDQy.YJxflg.OZ1CoujVtzqqI5KzE_7AcgMjjOM'); // Test Bot
+client.login('ODQyMTc2MDcwMTg5ODQyNDQy.YJxflg.L3xbFZ84bDVRHYu8I9jkiokKX0M'); // Test Bot
 //# sourceMappingURL=index.js.map

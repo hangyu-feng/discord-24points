@@ -24,4 +24,4 @@ client.on('ready', () => {
 
 client.on('message', client.msgHandler);
 
-client.login('ODQyMTc2MDcwMTg5ODQyNDQy.YJxflg.OZ1CoujVtzqqI5KzE_7AcgMjjOM');  // Test Bot
+client.login('<token>');  // Test Bot
