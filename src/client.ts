@@ -9,7 +9,7 @@ import {
 import { randInt } from "./randint";
 import { getAns } from "./24points";
 
-interface msgAttributes {
+interface MsgAttributes {
   channel: TextChannel | DMChannel | NewsChannel;
   author?: User;
   command?: string;
@@ -54,10 +54,10 @@ export class Client24 extends Client {
     const author = msg.author;
     const flags = msg.content.split(" ");
     const command = flags.shift();
-    return { channel, author, command, flags } as msgAttributes;
+    return { channel, author, command, flags } as MsgAttributes;
   }
 
-  help({ channel }: msgAttributes) {
+  help({ channel }: MsgAttributes) {
     // TODO: localize
     channel.send(
       [
@@ -69,7 +69,7 @@ export class Client24 extends Client {
     );
   }
 
-  getGame({ channel }: msgAttributes, min = 1, max = 13) {
+  getGame({ channel }: MsgAttributes, min = 1, max = 13) {
     do {
       this.prevGame = Array.from(Array(4)).map(() => randInt(min, max));
       this.prevAns = getAns(this.prevGame);
@@ -77,11 +77,11 @@ export class Client24 extends Client {
     channel.send(this.prevGame.join(", "));
   }
 
-  getAnswer({ channel }: msgAttributes) {
+  getAnswer({ channel }: MsgAttributes) {
     channel.send(this.prevAns);
   }
 
-  networth({ channel, flags }: msgAttributes) {
+  networth({ channel, flags }: MsgAttributes) {
     const buyback = Number(flags?.[0]);
     if (!Number.isInteger(buyback) || buyback < 200 || buyback > 100000000) {
       channel.send("Usage: -net <buyback cost>");
