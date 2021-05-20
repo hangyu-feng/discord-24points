@@ -5,10 +5,10 @@
   "main": "src/index.ts",
   "dependencies": {
     "@types/i18n": "^0.13.0",
-    "@types/js-yaml": "^4.0.1",
     "@types/node": "^15.3.0",
     "axios": "^0.21.1",
-    "discord.js": "^12.5.3"
+    "discord.js": "^12.5.3",
+    "yaml": "^1.10.2"
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.1",
