@@ -8,6 +8,7 @@ import {
 } from "discord.js";
 import { randInt } from "./randint";
 import { getAns } from "./24points";
+import { Player } from "./player";
 
 interface MsgAttributes {
   channel: TextChannel | DMChannel | NewsChannel;
@@ -41,6 +42,9 @@ export class Client24 extends Client {
       case "-networth":
         this.networth({ channel, flags });
         break;
+      case "-m":
+        this.startMonitor({ channel, flags });  // 5/20 早晨神志不清的BKB写的代码
+        break;
       default:
     }
   }
@@ -56,6 +60,39 @@ export class Client24 extends Client {
     const command = flags.shift();
     return { channel, author, command, flags } as MsgAttributes;
   }
+
+  // start of 5/20 早晨神志不清的bkb写的代码
+  executeAsync(func: () => void) {
+    setTimeout(func, 1000 *60);
+  }
+  startMonitor({ channel, flags }: MsgAttributes) {
+    flags =flags ?? [];
+    if (flags) {
+      channel.send(`开始偷偷看${flags[0]} 偷偷打dodo`);
+      channel.send(`==================================`);
+      new Player(Number(flags[0])).fetchRecentMatches().then((result) => {
+        const timeDiff:number = Date.now() - result[0].start_time - result[0].duration;
+        if (timeDiff<1000*60*60) {
+          channel.send(`${flags?.[0]} 刚刚在偷偷打dodo！`);
+        }
+        Array.from([1, 1, 1, 1, 1]).forEach((x) => {
+          this.executeAsync(() => {
+            new Player(Number(flags?.[0]))
+              .fetchRecentMatches()
+              .then((result) => {
+                const timeDiff:number = Date.now() - result[0].start_time - result[0].duration;
+                if (timeDiff<1000*60*60) {
+                  channel.send(`${flags?.[0]} 刚刚在偷偷打dodo！`);
+                }
+              });
+            return;
+          });
+        });
+      });
+    }
+
+  }
+  // end of 5/20 早晨神志不清的BKB写的代码
 
   help({ channel }: MsgAttributes) {
     // TODO: localize
